@@ -1,0 +1,34 @@
+name: Aggiorna Classifica Serie A
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout del codice
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Installa librerie
+        run: pip install requests beautifulsoup4
+
+      - name: Esegui scraper
+        run: python classifica/scraper.py
+
+      - name: Commit e Push dell'XML
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add classifica/classificaUPD.xml
+          git commit -m "Aggiornamento automatico classifica"
+          git push

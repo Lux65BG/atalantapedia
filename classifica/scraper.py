@@ -24,20 +24,21 @@ def get_classifica():
         cells = row.find_all('td')
         if len(cells) < 8: continue # Salta se la riga non è completa
         
-        nome_squadra = row.find('a', class_='ftbl__cta--inline').text.strip().upper()
+nome_squadra = row.find('a', class_='ftbl__cta--inline').text.strip().upper()
+        ET.SubElement(item, "TEAM").text = nome_squadra
         
         # Creazione dei tag richiesti
         ET.SubElement(item, "row_number").text = str(1775 + i)
         ET.SubElement(item, "SERIE").text = "A"
         ET.SubElement(item, "ANNO").text = "2025-2026"
         ET.SubElement(item, "TEAM").text = nome_squadra
-        ET.SubElement(item, "PT").text = cells[7].text.strip() # PT
-        ET.SubElement(item, "G").text = cells[1].text.strip()  # G
-        ET.SubElement(item, "V").text = cells[2].text.strip()  # V
-        ET.SubElement(item, "N").text = cells[3].text.strip()  # N
-        ET.SubElement(item, "P").text = cells[4].text.strip()  # P
-        ET.SubElement(item, "GF").text = cells[5].text.strip() # GF
-        ET.SubElement(item, "GS").text = cells[6].text.strip() # GS
+        ET.SubElement(item, "PT").text = cells[2].text.strip()
+        ET.SubElement(item, "G").text = cells[3].text.strip()
+        ET.SubElement(item, "V").text = cells[4].text.strip()
+        ET.SubElement(item, "N").text = cells[5].text.strip()
+        ET.SubElement(item, "P").text = cells[6].text.strip()
+        ET.SubElement(item, "GF").text = cells[7].text.strip()
+        ET.SubElement(item, "GS").text = cells[8].text.strip()
         
         # Logica POS
         if nome_squadra == "ATALANTA":

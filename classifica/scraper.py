@@ -12,32 +12,48 @@ def get_classifica():
     
     root = ET.Element("Root")
     
-    # Cerchiamo le righe della tabella (ogni riga contiene una squadra)
-    # Sky solitamente usa una struttura dove ogni squadra è in una riga 'tr'
+    # Seleziona le righe della tabella. 
+    # NOTA: Assicurati che il tag e la classe siano corretti basandoti sull'ispezione della pagina.
     rows = soup.find_all('tr', class_='ftbl__competition-ranking__body-row')
     
-    for row in rows:
+    for i, row in enumerate(rows):
         item = ET.SubElement(root, "item")
         
-        # Nome squadra (dal link che hai trovato)
-        team = row.find('a', class_='ftbl__cta--inline')
-        if team:
-            ET.SubElement(item, "TEAM").text = team.text.strip()
-            
-        # Punti
-        pts = row.find('td', class_='ftbl__competition-ranking__body-cell--points')
-        if pts:
-            ET.SubElement(item, "PT").text = pts.find('span').text.strip()
-            
-        # Partite giocate
-        played = row.find('td', class_='ftbl__competition-ranking__body-cell--mobile-show')
-        if played:
-            ET.SubElement(item, "G").text = played.find('span').text.strip()
+        # Estrazione dati dalle celle (td)
+        # Supponiamo l'ordine standard di Sky: Squadra, G, V, N, P, GF, GS, PT
+        cells = row.find_all('td')
+        if len(cells) < 8: continue # Salta se la riga non è completa
+        
+        nome_squadra = row.find('a', class_='ftbl__cta--inline').text.strip().upper()
+        
+        # Creazione dei tag richiesti
+        ET.SubElement(item, "row_number").text = str(1775 + i)
+        ET.SubElement(item, "SERIE").text = "A"
+        ET.SubElement(item, "ANNO").text = "2025-2026"
+        ET.SubElement(item, "TEAM").text = nome_squadra
+        ET.SubElement(item, "PT").text = cells[7].text.strip() # PT
+        ET.SubElement(item, "G").text = cells[1].text.strip()  # G
+        ET.SubElement(item, "V").text = cells[2].text.strip()  # V
+        ET.SubElement(item, "N").text = cells[3].text.strip()  # N
+        ET.SubElement(item, "P").text = cells[4].text.strip()  # P
+        ET.SubElement(item, "GF").text = cells[5].text.strip() # GF
+        ET.SubElement(item, "GS").text = cells[6].text.strip() # GS
+        
+        # Logica POS
+        if nome_squadra == "ATALANTA":
+            pos = "2"
+        elif i >= 17:
+            pos = "3"
+        elif i == 0:
+            pos = "1"
+        else:
+            pos = "0"
+        ET.SubElement(item, "POS").text = pos
 
-    # Salva il file
+    # Salvataggio
     output_path = os.path.join(os.path.dirname(__file__), "classificaUPD.xml")
     tree = ET.ElementTree(root)
-    tree.write(output_path, encoding="utf-8", xml_declaration=True)
+    tree.write(output_path, encoding="UTF-8", xml_declaration=True)
 
 if __name__ == "__main__":
     get_classifica()

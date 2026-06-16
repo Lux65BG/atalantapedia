@@ -1,9 +1,10 @@
 name: Aggiorna Classifica Serie A
 
 on:
-  schedule:
-#   - cron: '0 0 * * *'
   workflow_dispatch:
+  # A settembre, rimuovi il cancelletto dalla riga sotto per riattivare la pianificazione:
+  # schedule:
+  #   - cron: '0 0 * * *'
 
 jobs:
   build:

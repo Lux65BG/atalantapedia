@@ -11,6 +11,7 @@ def get_classifica():
     soup = BeautifulSoup(response.text, 'html.parser')
     
     root = ET.Element("Root")
+    root.set("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
     rows = soup.find_all('tr', class_='ftbl__competition-ranking__body-row')
     
     # Questo ciclo deve essere indentato di 4 spazi rispetto alla def get_classifica():
@@ -31,9 +32,9 @@ def get_classifica():
             # Qui controlliamo che 'data' abbia abbastanza elementi per evitare crash
             if len(data) >= 9:
                 item = ET.SubElement(root, "item")
-                ET.SubElement(item, "row_number").text = str(1775 + i)
+                ET.SubElement(item, "row_number").text = str(1795 + i)
                 ET.SubElement(item, "SERIE").text = "A"
-                ET.SubElement(item, "ANNO").text = "2025-2026"
+                ET.SubElement(item, "ANNO").text = "2025-2026 - A"
                 ET.SubElement(item, "TEAM").text = nome_squadra
                 
                 # Mappatura corretta dalla lista 'data'

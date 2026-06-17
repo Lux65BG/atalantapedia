@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
+from xml.dom import minidom
 import os
 
 def get_classifica():
@@ -14,7 +15,6 @@ def get_classifica():
     root.set("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
     rows = soup.find_all('tr', class_='ftbl__competition-ranking__body-row')
     
-    # Questo ciclo deve essere indentato di 4 spazi rispetto alla def get_classifica():
     for i, row in enumerate(rows):
         team_link = row.find('a', class_='ftbl__cta--inline')
         if not team_link: continue
@@ -29,7 +29,6 @@ def get_classifica():
                 if valore:
                     data.append(valore)
             
-            # Qui controlliamo che 'data' abbia abbastanza elementi per evitare crash
             if len(data) >= 9:
                 item = ET.SubElement(root, "item")
                 ET.SubElement(item, "row_number").text = str(1795 + i)
@@ -37,7 +36,6 @@ def get_classifica():
                 ET.SubElement(item, "ANNO").text = "2025-2026 - A"
                 ET.SubElement(item, "TEAM").text = nome_squadra
                 
-                # Mappatura corretta dalla lista 'data'
                 ET.SubElement(item, "PT").text = data[2] 
                 ET.SubElement(item, "G").text = data[3]
                 ET.SubElement(item, "V").text = data[4]
@@ -49,9 +47,21 @@ def get_classifica():
                 pos = "2" if nome_squadra == "ATALANTA" else ("3" if i >= 17 else ("1" if i == 0 else "0"))
                 ET.SubElement(item, "POS").text = pos
 
+    # Creazione XML formattato con minidom per replicare l'intestazione originale
+    xml_str = ET.tostring(root, encoding='utf-8')
+    parsed_xml = minidom.parseString(xml_str)
+    
+    # Formattazione per leggibilità (opzionale, togli 'indent' se preferisci file compatto)
+    pretty_xml = parsed_xml.toxml(encoding='utf-8')
+    
+    # Modifica forzata dell'intestazione per includere standalone="yes"
+    # minidom di base potrebbe omettere standalone, lo aggiungiamo manualmente se necessario
+    final_xml = pretty_xml.replace(b'<?xml version="1.0" encoding="utf-8"?>', 
+                                   b'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>')
+
     output_path = os.path.join(os.path.dirname(__file__), "classificaUPD.xml")
-    tree = ET.ElementTree(root)
-    tree.write(output_path, encoding="utf-8", xml_declaration=True)
+    with open(output_path, "wb") as f:
+        f.write(final_xml)
 
 if __name__ == "__main__":
     get_classifica()

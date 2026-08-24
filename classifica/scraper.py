@@ -31,7 +31,7 @@ def get_classifica():
             
             if len(data) >= 9:
                 item = ET.SubElement(root, "item")
-                ET.SubElement(item, "row_number").text = str(1818 + i)
+                ET.SubElement(item, "row_number").text = str(1815 + i)
                 ET.SubElement(item, "SERIE").text = "A"
                 ET.SubElement(item, "ANNO").text = "2026-2027 - A"
                 ET.SubElement(item, "TEAM").text = nome_squadra

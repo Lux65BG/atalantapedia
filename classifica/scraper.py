@@ -44,7 +44,7 @@ def get_classifica():
                 ET.SubElement(item, "GF").text = data[7]
                 ET.SubElement(item, "GS").text = data[8]
                 
-                pos = "2" if nome_squadra == "ATALANTA" else ("3" if i >= 17 else ("1" if i == 0 else "0"))
+                pos = "2" if nome_squadra == "ATALANTA" else ("3" if i >= 18 else ("1" if i == 0 else "0"))
                 ET.SubElement(item, "POS").text = pos
 
     # Creazione XML formattato con minidom per replicare l'intestazione originale

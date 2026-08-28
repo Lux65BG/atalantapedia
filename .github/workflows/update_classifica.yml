@@ -27,15 +27,15 @@ jobs:
         run: python classifica/scraper.py
 
       - name: Commit e Push dell'XML
-      run: |
-        git config --global user.name 'github-actions'
-        git config --global user.email 'github-actions@github.com'
-        git add classifica/classificaUPD.xml
-        
-        # Controlla se ci sono modifiche da committare
-        if git diff --staged --quiet; then
-          echo "Nessuna variazione nei dati. Nessun commit necessario."
-        else
-          git commit -m "Aggiornamento automatico classifica"
-          git push
-        fi
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add classifica/classificaUPD.xml
+
+          # Controlla se ci sono modifiche da committare
+          if git diff --staged --quiet; then
+            echo "Nessuna variazione nei dati. Nessun commit necessario."
+          else
+            git commit -m "Aggiornamento automatico classifica"
+            git push
+          fi

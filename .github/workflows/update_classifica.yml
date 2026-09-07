@@ -2,9 +2,9 @@ name: Aggiorna Classifica Serie A
 
 on:
   workflow_dispatch:
-  # A settembre, rimuovi il cancelletto dalla riga sotto per riattivare la pianificazione:
-  schedule:
-  - cron: '0 0 * * *'
+  # sotto aggiungere cancelletto a campionato fermo. 0 22 = ore 23 in inverno e 00 in estate
+  schedule: 
+  - cron: '0 22 * * *'
 
 jobs:
   build:
